@@ -10,8 +10,10 @@ from django.db import models
 
 
 class SysUser(AbstractBaseUser):
+    USERNAME_FIELD = 'account'
+
     id = models.BigIntegerField(primary_key=True, db_comment='用户ID')
-    account = models.CharField(max_length=255, blank=True, null=True, db_comment='账号')
+    account = models.CharField(max_length=255, blank=True, null=True, db_comment='账号', unique=True)
     password = models.CharField(max_length=255, blank=True, null=True, db_comment='密码')
     salt = models.CharField(max_length=255, blank=True, null=True, db_comment='盐值')
     nickname = models.CharField(max_length=255, blank=True, null=True, db_comment='昵称')
