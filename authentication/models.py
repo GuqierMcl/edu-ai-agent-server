@@ -30,3 +30,6 @@ class SysUser(AbstractBaseUser):
         managed = False
         db_table = 'sys_user'
         db_table_comment = '用户表'
+
+    def __str__(self):
+        return self.account
