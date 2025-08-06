@@ -10,6 +10,7 @@ from authentication.models import SysUser
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def login(request):
-    return R.success()
+    raise Exception()
+    # return R.success()
         
 
