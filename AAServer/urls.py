@@ -17,6 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import authentication.views
+
+BASE_URL  = 'api/'
+
 urlpatterns = [
     # path('admin/', admin.site.urls),
+    path(BASE_URL + 'auth/login', authentication.views.login),
 ]
