@@ -11,7 +11,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from auth.models import LoginParam
+from apps.auth.models import LoginParam
 
 
 class LoginSerializer(serializers.Serializer):

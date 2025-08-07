@@ -1,13 +1,10 @@
-from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import MD5PasswordHasher
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
 
 from AAServer.response import R, ResponseEnum
-from auth.models import User
-from auth.serializers import LoginSerializer
-from auth.services import do_login
+from apps.auth.models import User
+from apps.auth.serializers import LoginSerializer
+from apps.auth.services import do_login
 
 
 @api_view(['POST'])
