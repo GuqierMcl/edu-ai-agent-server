@@ -30,7 +30,7 @@ def common_exception_handler(exc, context):
     logger.error(context["request"].path)
     logger.error(context["request"].method)
     if response is not None:
-        response = R.fail(ResponseEnum.SYSTEM_ERROR, data=response.data['detail'])
+        response = R.fail(ResponseEnum.SYSTEM_ERROR, data=response.data)
     else:
         response = R.fail(ResponseEnum.SYSTEM_ERROR)
     return response

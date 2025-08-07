@@ -5,31 +5,44 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
-from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
+from django.utils import timezone
+
+from AAServer.common.middleware import get_current_user_id
+from AAServer.common.models import BaseModel
+from AAServer.common.snowflake import next_id
 
 
-class SysUser(AbstractBaseUser):
+class User(AbstractBaseUser, BaseModel):
     USERNAME_FIELD = 'account'
 
     id = models.BigIntegerField(primary_key=True, db_comment='用户ID')
     account = models.CharField(max_length=255, blank=True, null=True, db_comment='账号', unique=True)
     password = models.CharField(max_length=255, blank=True, null=True, db_comment='密码')
-    salt = models.CharField(max_length=255, blank=True, null=True, db_comment='盐值')
     nickname = models.CharField(max_length=255, blank=True, null=True, db_comment='昵称')
     name = models.CharField(max_length=255, blank=True, null=True, db_comment='真实姓名')
     phone = models.CharField(max_length=255, blank=True, null=True, db_comment='手机号')
     email = models.CharField(max_length=255, blank=True, null=True, db_comment='电子邮箱')
     type = models.IntegerField(blank=True, null=True, db_comment='用户类型，0表示管理员，1表示教师，2表示学生')
     avatar = models.BigIntegerField(blank=True, null=True, db_comment='头像ID，值为tb_image图片ID')
-    expired_time = models.DateTimeField(blank=True, null=True, db_comment='有效期')
-    del_field = models.IntegerField(db_column='del', blank=True, null=True, db_comment='逻辑删除')  # Field renamed because it was a Python reserved word.
+    expired_time = models.DateTimeField(blank=True, null=True, db_comment='账号到期时间')
+    last_login = models.DateTimeField(blank=True, null=True, db_comment='上一次登录时间')
+    is_del = models.IntegerField(db_column='del', blank=True, null=True,
+                                    db_comment='逻辑删除')
     create_time = models.DateTimeField(blank=True, null=True, db_comment='创建时间')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'sys_user'
         db_table_comment = '用户表'
 
     def __str__(self):
         return self.account
+
+class LoginParam(models.Model):
+    account = models.CharField()
+    password = models.CharField()
+
+    class Meta:
+        abstract = True
