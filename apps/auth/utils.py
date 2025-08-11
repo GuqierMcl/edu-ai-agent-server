@@ -11,7 +11,7 @@
 from AAServer import redis_util
 from AAServer.utils.redis_utils import CacheKeys
 
-from apps.auth.models import Permission
+from apps.permission.models import Permission
 
 
 def get_user_perms_from_db(user) -> list:

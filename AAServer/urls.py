@@ -18,9 +18,9 @@ from django.urls import path
 
 import apps.auth.views
 
-BASE_URL  = 'api/'
+BASE_URL  = 'api'
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path(BASE_URL + 'auth/login', apps.auth.views.login),
+    path(BASE_URL + apps.auth.views.login.path, apps.auth.views.login),
 ]

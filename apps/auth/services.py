@@ -33,7 +33,6 @@ def do_login(user, request):
     # 存入缓存
     user_info = model_to_dict(user, exclude=['create_time', 'update_time', 'password', 'create_user', 'update_user', 'is_del', 'expire_time', 'last_login_time'])
     user_info['permissions'] = permissions
-    print(user_info)
     redis_util.set_value(CacheKeys.TOKEN_USER + str(access_token), user_info, timeout=3600 * 24)  # 有效期为24小时
 
     # 响应结果

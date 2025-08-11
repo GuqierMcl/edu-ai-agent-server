@@ -3,7 +3,7 @@
 """
 全局异常处理
 @Project : AAServer 
-@File    : exception.py
+@File    : exception_handler.py
 @IDE     : PyCharm 
 @Author  : Guqier
 @Date    : 2025/8/6 14:14 
@@ -13,6 +13,7 @@ import logging
 
 from rest_framework.views import exception_handler
 
+from AAServer.common import exceptions
 from AAServer.response import ResponseEnum, R
 
 logger = logging.getLogger("AAServer")
@@ -29,6 +30,11 @@ def common_exception_handler(exc, context):
     logger.error(context["request"])
     logger.error(context["request"].path)
     logger.error(context["request"].method)
+
+    if isinstance(exc, exceptions.AuthenticationFailed):
+        response = R.fail(ResponseEnum.INVALID_TOKEN)
+        return response
+
     if response is not None:
         response = R.fail(ResponseEnum.SYSTEM_ERROR, data=response.data)
     else:

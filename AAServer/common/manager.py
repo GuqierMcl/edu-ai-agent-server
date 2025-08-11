@@ -9,7 +9,7 @@
 @Date    : 2025/8/7 12:27 
 @Version : 1.0
 """
-
+from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.db.models import QuerySet
 

@@ -40,7 +40,8 @@ INSTALLED_APPS = [
 
     # Project Apps
     'apps.auth.apps.AuthConfig',
-    'apps.resource.apps.ResourceConfig'
+    'apps.resource.apps.ResourceConfig',
+    'apps.permission.apps.PermissionConfig'
 ]
 
 MIDDLEWARE = [
@@ -107,13 +108,14 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         # "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        # "rest_framework.authentication.TokenAuthentication",
         # "rest_framework.authentication.BasicAuthentication",
+        "AAServer.common.RedisTokenAuthentication.RedisTokenAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
-    "EXCEPTION_HANDLER": "AAServer.exception.common_exception_handler",
+    "EXCEPTION_HANDLER": "AAServer.common.exception_handler.common_exception_handler",
 }
 
 # Database

@@ -1,10 +1,12 @@
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
+from AAServer.common.decorators import req_path
 from AAServer.response import R, ResponseEnum
 from apps.auth.models import User
 from apps.auth.services import do_login
 
 
+@req_path(path="/auth/login")
 @api_view(['POST'])
 @authentication_classes(())
 @permission_classes(())
