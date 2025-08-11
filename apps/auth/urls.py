@@ -15,4 +15,5 @@ import apps.auth.views
 urlpatterns = [
     path('login', apps.auth.views.login),
     path('logout', apps.auth.views.logout),
+    path('refresh', apps.auth.views.refresh_token),
 ]
