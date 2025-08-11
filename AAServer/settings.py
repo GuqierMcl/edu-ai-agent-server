@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     # Project Apps
     'apps.auth.apps.AuthConfig',
     'apps.resource.apps.ResourceConfig',
-    'apps.permission.apps.PermissionConfig'
+    'apps.permission.apps.PermissionConfig',
+    'apps.user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
@@ -90,10 +91,11 @@ LANGUAGE_CODE = 'zh-Hans'  # en-us为英文
 
 WSGI_APPLICATION = 'AAServer.wsgi.application'
 
+APPEND_SLASH = False  # 去掉url尾部斜杠
+
 # DRF全局配置
 REST_FRAMEWORK = {
     "UNAUTHENTICATED_USER": None,  # 配置匿名用户
-    "APPEND_SLASH": False,  # 去掉url尾部斜杠
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
@@ -145,8 +147,12 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
+            'SERIALIZER': 'django_redis.serializers.json.JSONSerializer',
             "PASSWORD": "guqier6379"
-        }
+        },
+        "KEY_PREFIX": "EAA",  # 设置缓存key的前缀
+        "VERSION": 1  # 缓存版本
+
     }
 }
 

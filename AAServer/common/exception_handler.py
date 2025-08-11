@@ -10,6 +10,7 @@
 @Version : 1.0
 """
 import logging
+import traceback
 
 from rest_framework.exceptions import NotAuthenticated, AuthenticationFailed
 from rest_framework.views import exception_handler
@@ -26,11 +27,15 @@ def common_exception_handler(exc, context):
     :return:
     """
     response = exception_handler(exc, context)
+    request = context["request"]
     print('异常信息:', exc)
-    logger.error(context["view"])
-    logger.error(context["request"])
-    logger.error(context["request"].path)
-    logger.error(context["request"].method)
+    traceback.print_exc()
+    logger.error(
+        "Request Basics:\n"
+        f"  Path: {request.path}\n"
+        f"  Method: {request.method}\n"
+        f"  Host: {request.get_host()}"
+    )
 
     # 处理自定义异常
     if isinstance(exc, AuthenticationFailed):

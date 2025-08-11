@@ -10,6 +10,7 @@
 """
 from AAServer import redis_util
 from AAServer.utils.redis_utils import CacheKeys
+from apps.auth.models import User
 
 from apps.permission.models import Permission
 
@@ -37,8 +38,12 @@ def get_user_perms(user) -> list:
     :param user: 用户对象
     :return: set: 用户权限集合
     """
-    user_info = redis_util.get_value(CacheKeys.USER_INFO + user.id)
-    perms = user_info['permissions']
-    if perms is None:
-        perms = get_user_perms_from_db(user)
+    # 兼容 dict / User 实例
+    user_id = user['id'] if isinstance(user, dict) else user.id
+
+    user_info = redis_util.get_value(CacheKeys.USER_INFO + str(user_id))
+    if user_info:
+        perms = user_info['permissions']
+    else:
+        perms = get_user_perms_from_db(user if isinstance(user, User) else User.objects.get(id=user_id))
     return perms

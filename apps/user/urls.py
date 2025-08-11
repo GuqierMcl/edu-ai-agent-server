@@ -5,12 +5,13 @@
 @File    : urls.py.py
 @IDE     : PyCharm 
 @Author  : Guqier
-@Date    : 2025/8/11 15:23 
+@Date    : 2025/8/11 17:17 
 @Version : 1.0
 """
 from django.urls import path, include
 
+import apps.user.views
+
 urlpatterns = [
-    path('/auth', include('apps.auth.urls')),
-    path('/user', include('apps.user.urls')),
+    path('', apps.user.views.get_user_info),
 ]
