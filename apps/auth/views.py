@@ -11,6 +11,7 @@ from apps.auth.services import do_login
 
 @api_view(['POST'])
 @authentication_classes(())
+@permission_classes((permissions.AllowAny,))
 def login(request):
     # 参数校验
     account = request.data['account']
