@@ -1,15 +1,16 @@
+from rest_framework import permissions
+from rest_framework.authentication import get_authorization_header
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
-from AAServer.common.decorators import req_path
+from AAServer import redis_util
 from AAServer.response import R, ResponseEnum
+from AAServer.utils.redis_utils import CacheKeys
 from apps.auth.models import User
 from apps.auth.services import do_login
 
 
-@req_path(path="/auth/login")
 @api_view(['POST'])
 @authentication_classes(())
-@permission_classes(())
 def login(request):
     # 参数校验
     account = request.data['account']
@@ -23,5 +24,10 @@ def login(request):
 
     return R.success(do_login(user, request))
 
+
+@api_view(['POST'])
+def logout(request):
+    redis_util.delete_value(CacheKeys.TOKEN_USER + str(request.headers.get('Authorization').split(' ')[1]))
+    return R.success()
 
 

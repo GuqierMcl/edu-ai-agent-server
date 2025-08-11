@@ -11,6 +11,7 @@
 import json
 
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import AuthenticationFailed
 
 from AAServer import redis_util
 from AAServer.common import exceptions
@@ -27,4 +28,4 @@ class RedisTokenAuthentication(TokenAuthentication):
             for key_name in user_dict.keys():
                 setattr(user_obj, key_name, user_dict[key_name])
             return user_obj, key
-        raise exceptions.AuthenticationFailed
+        raise AuthenticationFailed

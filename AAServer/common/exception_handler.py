@@ -11,6 +11,7 @@
 """
 import logging
 
+from rest_framework.exceptions import NotAuthenticated, AuthenticationFailed
 from rest_framework.views import exception_handler
 
 from AAServer.common import exceptions
@@ -25,16 +26,19 @@ def common_exception_handler(exc, context):
     :return:
     """
     response = exception_handler(exc, context)
-    logger.error(exc)
+    print('异常信息:', exc)
     logger.error(context["view"])
     logger.error(context["request"])
     logger.error(context["request"].path)
     logger.error(context["request"].method)
 
-    if isinstance(exc, exceptions.AuthenticationFailed):
-        response = R.fail(ResponseEnum.INVALID_TOKEN)
-        return response
+    # 处理自定义异常
+    if isinstance(exc, AuthenticationFailed):
+        return R.fail(ResponseEnum.INVALID_TOKEN)
+    if isinstance(exc, NotAuthenticated):
+        return R.fail(ResponseEnum.USER_NOT_LOGIN)
 
+    # 处理其他异常
     if response is not None:
         response = R.fail(ResponseEnum.SYSTEM_ERROR, data=response.data)
     else:
