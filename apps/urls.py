@@ -13,4 +13,5 @@ from django.urls import path, include
 urlpatterns = [
     path('/auth', include('apps.auth.urls')),
     path('/user', include('apps.user.urls')),
+    path('/resource', include('apps.resource.urls')),
 ]

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from typing import List, Tuple
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',  # 注册rest应用
     'rest_framework.authtoken',
+    'django_minio_backend',  # MinIO存储后端
 
     # Project Apps
     'apps.auth.apps.AuthConfig',
@@ -46,6 +48,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'AAServer.common.middleware.GlobalRequestMiddleware',
+    # 'AAServer.common.middleware.CurrentUserMiddleware',
     'AAServer.common.middleware.CorsMiddleware',  # 跨域中间件
     'django.middleware.security.SecurityMiddleware',
     # 'django.contrib.sessions.middleware.SessionMiddleware',
@@ -53,8 +57,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     # 'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'AAServer.common.middleware.CurrentUserMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'AAServer.urls'
@@ -155,6 +158,29 @@ CACHES = {
 
     }
 }
+
+STORAGES = {  # -- ADDED IN Django 5.1
+    "default": {
+        "BACKEND": "django_minio_backend.models.MinioBackend",
+    },
+    "staticfiles": {  # -- OPTIONAL
+        "BACKEND": "django_minio_backend.models.MinioBackendStatic",
+    },
+}
+
+# ------------ MINIO ----------------
+
+MINIO_ENDPOINT = '123.56.190.241:9000'
+MINIO_ACCESS_KEY = 'Lm4RvLqsiqR2gBGVJZBX'
+MINIO_SECRET_KEY = 'ywIO4Lymr5mskdZfoVJJddPjp2dH34T8XRcW1mY5'
+MINIO_USE_HTTPS = False
+MINIO_PUBLIC_BUCKETS = [
+    'eaa',
+]
+MINIO_POLICY_HOOKS: List[Tuple[str, dict]] = []
+MINIO_MEDIA_FILES_BUCKET = 'eaa'  # replacement for MEDIA_ROOT
+# MINIO_STATIC_FILES_BUCKET = 'eaa'  # replacement for STATIC_ROOT
+MINIO_BUCKET_CHECK_ON_SAVE = True  # Default: True // Creates bucket if missing, then save
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

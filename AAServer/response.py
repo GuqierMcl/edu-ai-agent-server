@@ -41,8 +41,6 @@ class ResponseEnum(Enum):
 
     PARAM_IS_BLANK = (102, "必要参数为空")
 
-    NOTE_NOT_EXIST = (103, "笔记不存在")
-
     """
     用户错误
     201 - 299
@@ -79,6 +77,8 @@ class ResponseEnum(Enum):
     数据错误
     """
     CACHE_NOT_EXIST = (401, "缓存不存在或已过期")
+
+    INVALID_METHOD = (402, "请求方法不允许")
 
     @property
     def code(self):

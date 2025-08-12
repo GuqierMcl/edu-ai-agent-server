@@ -13,6 +13,7 @@ from django.db import models
 from django.utils import timezone
 
 from AAServer.common.manager import ModelManager
+from AAServer.common.middleware import GlobalRequestMiddleware
 from AAServer.utils.session_utils import SessionUtils
 from AAServer.common.snowflake import next_id
 
@@ -40,7 +41,9 @@ class BaseModel(LogicalDeleteModel):
 
     def save(self, *args, **kwargs):
         now = timezone.now()
-        user_id = SessionUtils.get_current_user_id()
+        # user_id = SessionUtils.get_current_user_id()
+        user_id = GlobalRequestMiddleware.get_user().id # 获取当前用户ID
+        print('当前用户ID:', user_id)
 
         # 新增
         if self._state.adding:
@@ -57,3 +60,10 @@ class BaseModel(LogicalDeleteModel):
             self.update_user = user_id
 
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """
+        逻辑删除
+        """
+        self.is_del = 1
+        self.save(update_fields=['is_del'])

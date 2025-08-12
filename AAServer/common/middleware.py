@@ -16,6 +16,9 @@ from django.utils.deprecation import MiddlewareMixin
 
 _thread_locals = threading.local()
 
+from asgiref.local import Local
+current_request = Local()
+
 class CurrentUserMiddleware(MiddlewareMixin):
     """把当前登录用户塞进线程局部变量"""
     def process_request(self, request):
@@ -24,6 +27,21 @@ class CurrentUserMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         _thread_locals.user = None
         return response
+
+class GlobalRequestMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        current_request.request = request
+        response = self.get_response(request)
+        del current_request.request
+        return response
+
+    @classmethod
+    def get_user(cls):
+        req = getattr(current_request, 'request', None)
+        return req.user if req and req.user.is_authenticated else None
 
 class CorsMiddleware:
     """处理跨域请求的中间件"""
