@@ -99,7 +99,8 @@ APPEND_SLASH = False  # 去掉url尾部斜杠
 # DRF全局配置
 REST_FRAMEWORK = {
     "UNAUTHENTICATED_USER": None,  # 配置匿名用户
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_PAGINATION_CLASS": "AAServer.common.pagination.CwsPageNumberPagination",
     "PAGE_SIZE": 10,
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
     "DEFAULT_RENDERER_CLASSES": [

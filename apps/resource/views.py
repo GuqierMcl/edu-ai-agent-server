@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from AAServer.common.middleware import GlobalRequestMiddleware
 from AAServer.response import R, ResponseEnum
 from AAServer.utils.session_utils import SessionUtils
+from apps.resource.models import Resource
 from apps.resource.serializers import ResourceSerializer
 
 # Create your views here.
@@ -29,3 +30,67 @@ def upload_resource(request):
                 sequence=rs.validated_data['sequence'] if 'sequence' in rs.validated_data else 0)
         return R.success(data=rs.data)
     return R.fail(ResponseEnum.UPLOAD_FAIL, data=rs.errors)
+
+@api_view(['GET'])
+def get_resource(request, id):
+    """
+    获取资源
+    :param request:
+    :param id: 资源ID
+    :return:
+    """
+    try:
+        resource = ResourceSerializer(instance=Resource.objects.get(id=id))
+        return R.success(data=resource.data)
+    except Resource.DoesNotExist:
+        return R.fail(ResponseEnum.RESOURCE_NOT_FOUND, data={'id': id})
+
+
+@api_view(['GET'])
+def get_resources(request):
+    """
+    获取资源列表
+    :param request:
+    :return:
+    """
+    name = request.GET.get('name', '').strip()
+    type_id = request.GET.get('type')
+
+    qs = Resource.objects.all()
+    if name:  # 只当 name 非空才过滤
+        qs = qs.filter(name__icontains=name)
+    if type_id:  # 只当 type 非空才过滤
+        qs = qs.filter(type=type_id)
+
+    qs = qs.order_by('update_time')
+    serializer = ResourceSerializer(qs, many=True)
+    return R.success(data=serializer.data)
+
+@api_view(['PUT', 'DELETE'])
+def update_or_delete_resource(request):
+    """
+    更新资源
+    :param request:
+    :return:
+    """
+    if request.method == 'PUT':
+        _id = request.data.get('id')
+        if not _id:
+            return R.fail(ResponseEnum.PARAM_IS_BLANK, data={'id': 'ID is required'})
+
+        resource = Resource.objects.get(id=_id)
+        serializer = ResourceSerializer(resource, data=request.data, partial=True)  # 允许部分更新
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        return R.success(data=ResourceSerializer(instance).data)
+    elif request.method == 'DELETE':
+        ids = request.GET.getlist('ids')
+        if not ids:
+            return R.fail(ResponseEnum.PARAM_IS_BLANK, data={'ids': 'IDs are required'})
+
+        # TODO: 引用检查，后续完善
+
+        Resource.objects.filter(id__in=ids).delete()
+        return R.success(data={'deleted_ids': ids})
+    return R.success(ResponseEnum.INVALID_METHOD)
+

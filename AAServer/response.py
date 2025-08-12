@@ -71,13 +71,14 @@ class ResponseEnum(Enum):
     GROUP_JOIN_COUNT_MAX = (306, "加入小组数已最大")
     GROUP_INVITATION_CODE_INVALID = (307, "邀请码不存在或已过期")
     TEST_PAPER_INVALID = (308, "试卷不存在或已删除")
+
+    RESOURCE_NOT_FOUND = (309, "资源不存在或已删除")
     SYSTEM_ERROR = (999, "系统异常")
 
     """
     数据错误
     """
     CACHE_NOT_EXIST = (401, "缓存不存在或已过期")
-
     INVALID_METHOD = (402, "请求方法不允许")
 
     @property

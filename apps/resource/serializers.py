@@ -8,11 +8,18 @@
 @Date    : 2025/8/12 15:04 
 @Version : 1.0
 """
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .models import Resource
+import django.conf
 
+ENDPOINT = django.conf.settings.MINIO_ENDPOINT
+USE_HTTPS = django.conf.settings.MINIO_USE_HTTPS
+BUCKETS = django.conf.settings.MINIO_PUBLIC_BUCKETS
 
 class ResourceSerializer(ModelSerializer):
+    remote_file_url = serializers.SerializerMethodField(read_only=True) # 远程文件URL
+
     class Meta:
         model = Resource
         fields = '__all__'
@@ -25,3 +32,10 @@ class ResourceSerializer(ModelSerializer):
         self.fields['remote_file_url'].required = False
         self.fields['old_filename'].required = False
         self.fields['sequence'].required = False
+
+        # method = self.context['request'].method
+        # # POST 必填，PUT/PATCH 可选
+        # self.fields['file'].required = (method == 'POST')
+
+    def get_remote_file_url(self, obj):
+        return f'{"https" if USE_HTTPS else "http"}://{ENDPOINT}/{BUCKETS[0]}/{obj.file}'

@@ -14,4 +14,7 @@ import apps.resource.views
 urlpatterns = [
     # 这里可以添加资源相关的URL路由
     path('/upload', apps.resource.views.upload_resource),
+    path('/<int:id>', apps.resource.views.get_resource),
+    path('/page', apps.resource.views.get_resources),
+    path('', apps.resource.views.update_or_delete_resource),
 ]
