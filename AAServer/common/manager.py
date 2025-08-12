@@ -22,9 +22,6 @@ class LogicalDeleteQuerySet(QuerySet):
     def delete(self):
         return super(LogicalDeleteQuerySet, self).update(is_del=1)
 
-    def hard_delete(self):
-        return super(LogicalDeleteQuerySet, self).delete()
-
 
 class ModelManager(models.Manager):
     """

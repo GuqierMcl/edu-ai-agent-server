@@ -25,6 +25,9 @@ class LogicalDeleteModel(models.Model):
                                     db_comment='逻辑删除，0启用，1停用')  # Field renamed because it was a Python reserved word.
     class Meta:
         abstract = True
+    def save(self, *args, **kwargs):
+        self.is_del = 0
+        super().save(*args, **kwargs)
 
 class BaseModel(LogicalDeleteModel):
     """
@@ -43,7 +46,6 @@ class BaseModel(LogicalDeleteModel):
         now = timezone.now()
         # user_id = SessionUtils.get_current_user_id()
         user_id = GlobalRequestMiddleware.get_user().id # 获取当前用户ID
-        print('当前用户ID:', user_id)
 
         # 新增
         if self._state.adding:
@@ -52,7 +54,6 @@ class BaseModel(LogicalDeleteModel):
                 self.create_time = self.create_time or now
             if hasattr(self, 'create_user'):
                 self.create_user = self.create_user or user_id
-            self.is_del = 0
         # 更新
         if hasattr(self, 'update_time'):
             self.update_time = now
