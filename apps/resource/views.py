@@ -1,7 +1,9 @@
 import django.conf
+from django.contrib.admin.templatetags.admin_list import pagination
 from rest_framework.decorators import api_view
 
 from AAServer.common.middleware import GlobalRequestMiddleware
+from AAServer.common.pagination import CwsPageNumberPagination
 from AAServer.response import R, ResponseEnum
 from AAServer.utils.session_utils import SessionUtils
 from apps.resource.models import Resource
@@ -27,7 +29,7 @@ def upload_resource(request):
         file = rs.validated_data['file']  # 2025-8-12/3489700_20250616190501_1_TdFsQoq.png
         rs.save(size=file.size if file else None,
                 old_filename=str(file),
-                sequence=rs.validated_data['sequence'] if 'sequence' in rs.validated_data else 0)
+                sequence=rs.validated_data['sequence'] if 'sequence' in rs.validated_data else 1)
         return R.success(data=rs.data)
     return R.fail(ResponseEnum.UPLOAD_FAIL, data=rs.errors)
 
@@ -63,8 +65,12 @@ def get_resources(request):
         qs = qs.filter(type=type_id)
 
     qs = qs.order_by('update_time')
-    serializer = ResourceSerializer(qs, many=True)
-    return R.success(data=serializer.data)
+
+    paginator = CwsPageNumberPagination()
+    page = paginator.paginate_queryset(qs, request)
+
+    serializer = ResourceSerializer(page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['PUT', 'DELETE'])
 def update_or_delete_resource(request):

@@ -104,7 +104,8 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
     "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.JSONRenderer",
+        "AAServer.common.renderers.NumToStrJSONRenderer",
+        # "rest_framework.renderers.JSONRenderer",
         # "rest_framework.renderers.BrowsableAPIRenderer",
     ],
     # 解析Request.data

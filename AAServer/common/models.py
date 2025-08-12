@@ -45,7 +45,10 @@ class BaseModel(LogicalDeleteModel):
     def save(self, *args, **kwargs):
         now = timezone.now()
         # user_id = SessionUtils.get_current_user_id()
-        user_id = GlobalRequestMiddleware.get_user().id # 获取当前用户ID
+        user = GlobalRequestMiddleware.get_user()  # 获取当前用户对象
+        user_id = None
+        if user is not None:
+            user_id = GlobalRequestMiddleware.get_user().id # 获取当前用户ID
 
         # 新增
         if self._state.adding:

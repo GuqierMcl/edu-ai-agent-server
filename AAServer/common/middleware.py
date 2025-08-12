@@ -41,7 +41,7 @@ class GlobalRequestMiddleware:
     @classmethod
     def get_user(cls):
         req = getattr(current_request, 'request', None)
-        return req.user if req and req.user.is_authenticated else None
+        return req.user if req else None
 
 class CorsMiddleware:
     """处理跨域请求的中间件"""
