@@ -28,10 +28,10 @@ def upload_resource(request):
     rs = ResourceSerializer(data=request.data)
     if rs.is_valid():
         file = rs.validated_data['file']  # 2025-8-12/3489700_20250616190501_1_TdFsQoq.png
-        rs.save(size=file.size if file else None,
+        instance = rs.save(size=file.size if file else None,
                 old_filename=str(file),
                 sequence=rs.validated_data['sequence'] if 'sequence' in rs.validated_data else 1)
-        return R.success(data=rs.data)
+        return R.success(data=ResourceSerializer(instance).data)
     return R.fail(ResponseEnum.UPLOAD_FAIL, data=rs.errors)
 
 @api_view(['GET'])
