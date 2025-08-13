@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -12,6 +13,7 @@ class CodeView(APIView):
     """
     CodeView handles the code dictionary operations.
     """
+
     def post(self, request, *args, **kwargs):
         """
         新增码表
@@ -76,3 +78,21 @@ class CodeView(APIView):
         if deleted_count == 0:
             return R.fail(ResponseEnum.PARAM_IS_INVAlID, data={'ids': _ids})
         return R.success(data={'deleted_count': deleted_count})
+
+
+@api_view
+def get_options(request, type_name):
+    """
+    获取码表类型选项
+    :param type_name:
+    :param request:
+    :return:
+    """
+    if not type_name:
+        return R.fail(ResponseEnum.PARAM_IS_BLANK)
+
+    codes = Code.objects.filter(type=type_name).values('code', 'name')
+    if not codes:
+        return R.fail(ResponseEnum.DATA_NOT_FOUND, data={'type': type_name})
+
+    return R.success(data=CodeSerializer(codes, many=True).data)

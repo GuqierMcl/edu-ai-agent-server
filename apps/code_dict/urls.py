@@ -10,8 +10,10 @@
 """
 from django.urls import path
 
+import apps.code_dict.views
 from apps.code_dict.views import CodeView
 
 urlpatterns = [
     path('', CodeView.as_view()),
+    path('/options/<str:type_name>', apps.code_dict.views.get_options),
 ]
