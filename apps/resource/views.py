@@ -8,7 +8,7 @@ from AAServer.common.pagination import CwsPageNumberPagination
 from AAServer.response import R, ResponseEnum
 from AAServer.utils.session_utils import SessionUtils
 from apps.resource.models import Resource
-from apps.resource.serializers import ResourceSerializer
+from apps.resource.serializers import ResourceUpdateSerializer, ResourceSerializer
 
 # Create your views here.
 
@@ -86,10 +86,10 @@ def update_or_delete_resource(request):
             return R.fail(ResponseEnum.PARAM_IS_BLANK, data={'id': 'ID is required'})
 
         resource = Resource.objects.get(id=_id)
-        serializer = ResourceSerializer(resource, data=request.data, partial=True)  # 允许部分更新
+        serializer = ResourceUpdateSerializer(resource, data=request.data, partial=True)  # 允许部分更新
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
-        return R.success(data=ResourceSerializer(instance).data)
+        return R.success(data=ResourceUpdateSerializer(instance).data)
     elif request.method == 'DELETE':
         ids = request.GET.getlist('ids')
         if not ids:
