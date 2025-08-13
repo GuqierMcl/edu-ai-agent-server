@@ -93,6 +93,8 @@ def get_options(request, type_name):
         return R.fail(ResponseEnum.PARAM_IS_BLANK)
 
     codes = Code.objects.filter(type=type_name).values('code', 'name')
+    # 优先通过字段sequence排序，如果没有则create_time排序
+    codes = codes.order_by('sequence', 'create_time')
     if not codes:
         return R.fail(ResponseEnum.DATA_NOT_FOUND, data={'type': type_name})
 
