@@ -2,6 +2,7 @@ import django.conf
 from django.contrib.admin.templatetags.admin_list import pagination
 from rest_framework.decorators import api_view
 
+from AAServer import app_properties
 from AAServer.common.middleware import GlobalRequestMiddleware
 from AAServer.common.pagination import CwsPageNumberPagination
 from AAServer.response import R, ResponseEnum
@@ -100,3 +101,11 @@ def update_or_delete_resource(request):
         return R.success(data={'deleted_ids': ids})
     return R.success(ResponseEnum.INVALID_METHOD)
 
+@api_view(['GET'])
+def get_resource_type(request):
+    """
+    获取资源类型
+    :param request:
+    :return:
+    """
+    return R.success(data=app_properties.Resource.RESOURCE_TYPE)

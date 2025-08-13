@@ -17,4 +17,5 @@ urlpatterns = [
     path('/<int:id>', apps.resource.views.get_resource),
     path('/page', apps.resource.views.get_resources),
     path('', apps.resource.views.update_or_delete_resource),
+    path('/type', apps.resource.views.get_resource_type),
 ]

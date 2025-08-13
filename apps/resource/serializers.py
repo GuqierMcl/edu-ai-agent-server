@@ -10,6 +10,8 @@
 """
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
+
+from AAServer import app_properties
 from .models import Resource
 import django.conf
 
@@ -19,6 +21,7 @@ BUCKETS = django.conf.settings.MINIO_PUBLIC_BUCKETS
 
 class ResourceSerializer(ModelSerializer):
     remote_file_url = serializers.SerializerMethodField(read_only=True) # 远程文件URL
+    type_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Resource
@@ -39,3 +42,7 @@ class ResourceSerializer(ModelSerializer):
 
     def get_remote_file_url(self, obj):
         return f'{"https" if USE_HTTPS else "http"}://{ENDPOINT}/{BUCKETS[0]}/{obj.file}'
+
+    def get_type_name(self, obj):
+        type_dict = {item['type']: item['name'] for item in app_properties.Resource.RESOURCE_TYPE}
+        return type_dict.get(obj.type, '未知')
