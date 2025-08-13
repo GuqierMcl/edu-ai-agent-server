@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'apps.auth.apps.AuthConfig',
     'apps.resource.apps.ResourceConfig',
     'apps.permission.apps.PermissionConfig',
-    'apps.user.apps.UserConfig'
+    'apps.user.apps.UserConfig',
+    'apps.code_dict.apps.CodeDictConfig'
 ]
 
 MIDDLEWARE = [

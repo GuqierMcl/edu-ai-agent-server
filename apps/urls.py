@@ -14,4 +14,5 @@ urlpatterns = [
     path('/auth', include('apps.auth.urls')),
     path('/user', include('apps.user.urls')),
     path('/resource', include('apps.resource.urls')),
+    path('/code', include('apps.code_dict.urls')),
 ]

@@ -12,10 +12,9 @@
 import logging
 import traceback
 
-from rest_framework.exceptions import NotAuthenticated, AuthenticationFailed
+from rest_framework.exceptions import NotAuthenticated, AuthenticationFailed, ValidationError
 from rest_framework.views import exception_handler
 
-from AAServer.common import exceptions
 from AAServer.response import ResponseEnum, R
 
 logger = logging.getLogger("AAServer")
@@ -39,9 +38,11 @@ def common_exception_handler(exc, context):
 
     # 处理自定义异常
     if isinstance(exc, AuthenticationFailed):
-        return R.fail(ResponseEnum.INVALID_TOKEN)
+        return R.fail(ResponseEnum.INVALID_TOKEN, data=exc.detail)
     if isinstance(exc, NotAuthenticated):
-        return R.fail(ResponseEnum.USER_NOT_LOGIN)
+        return R.fail(ResponseEnum.USER_NOT_LOGIN, data=exc.detail)
+    if isinstance(exc, ValidationError):
+        return R.fail(ResponseEnum.PARAM_IS_INVAlID, data=exc.detail)
 
     # 处理其他异常
     if response is not None:
