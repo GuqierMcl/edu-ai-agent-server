@@ -17,18 +17,28 @@ from apps.resource.serializers import ResourceSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
+    avatar_url = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = User
         fields = "__all__"
         read_only_fields = ("id",)
 
-class UserInfoSerializer(serializers.ModelSerializer):
+    def get_avatar_url(self, obj):
+        avatar_id = obj.avatar if isinstance(obj, User) else obj['avatar']
+        if avatar_id:
+            resource = Resource.objects.get(id=avatar_id)
+            url = ResourceSerializer(resource).data['remote_file_url']
+            return url
+        return None
+
+class UserInfoSerializer(UserSerializer):
     """
     用户信息序列化器
     """
     permission_keys = serializers.SerializerMethodField(read_only=True)
     roles = serializers.SerializerMethodField(read_only=True)
-    avatar_url = serializers.SerializerMethodField(read_only=True)
+
 
     class Meta:
         model = User
@@ -40,9 +50,4 @@ class UserInfoSerializer(serializers.ModelSerializer):
     def get_roles(self, obj):
         return ['admin']  # TODO: 获取用户角色列表，待实现
 
-    def get_avatar_url(self, obj):
-        if obj['avatar']:
-            resource = Resource.objects.get(id=obj['avatar'])
-            url = ResourceSerializer(resource).data['remote_file_url']
-            return url
-        return None
+

@@ -81,6 +81,13 @@ class ResponseEnum(Enum):
     CACHE_NOT_EXIST = (401, "缓存不存在或已过期")
     INVALID_METHOD = (402, "请求方法不允许")
 
+    """
+    第三方服务异常
+    """
+    NETWORK_ERROR = (501, "网络异常")
+    REDIS_TIMEOUT = (502, "Redis服务超时")
+
+
     @property
     def code(self):
         """获取状态码"""

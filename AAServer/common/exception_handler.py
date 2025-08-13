@@ -12,6 +12,7 @@
 import logging
 import traceback
 
+import redis
 from rest_framework.exceptions import NotAuthenticated, AuthenticationFailed, ValidationError
 from rest_framework.views import exception_handler
 
@@ -43,6 +44,8 @@ def common_exception_handler(exc, context):
         return R.fail(ResponseEnum.USER_NOT_LOGIN, data=exc.detail)
     if isinstance(exc, ValidationError):
         return R.fail(ResponseEnum.PARAM_IS_INVAlID, data=exc.detail)
+    if isinstance(exc, redis.exceptions.RedisError):
+        return R.fail(ResponseEnum.NETWORK_ERROR, data=str(exc))
 
     # 处理其他异常
     if response is not None:

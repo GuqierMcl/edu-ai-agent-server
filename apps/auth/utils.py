@@ -8,6 +8,8 @@
 @Date    : 2025/8/7 16:04 
 @Version : 1.0
 """
+import json
+
 from AAServer import redis_util
 from AAServer.utils.redis_utils import CacheKeys
 from apps.auth.models import User
@@ -41,10 +43,10 @@ def get_user_perms(user) -> list:
     # 兼容 dict / User 实例
     user_id = user['id'] if isinstance(user, dict) else user.id
 
-    permission_dict = redis_util.get_value(CacheKeys.USER_PERMISSIONS + str(user_id))
-    if permission_dict:
-        return list(permission_dict)
+    permission_list = redis_util.get_object(CacheKeys.USER_PERMISSIONS + str(user_id))
+    if permission_list:
+        return permission_list
     else:
         perms = get_user_perms_from_db(user if isinstance(user, User) else User.objects.get(id=user_id))
-        redis_util.set_value(CacheKeys.USER_PERMISSIONS + str(user_id), str(list(perms)), timeout=3600 * 24)  # 缓存一天
+        redis_util.set_object(CacheKeys.USER_PERMISSIONS + str(user_id), perms, timeout=3600 * 24)  # 缓存一天
         return perms

@@ -23,9 +23,9 @@ from apps.auth.models import User
 class RedisTokenAuthentication(TokenAuthentication):
     keyword = 'Token'
     def authenticate_credentials(self, key):
-        user_data = redis_util.get_value(CacheKeys.TOKEN_USER + str(key))
+        user_data = redis_util.get_object(CacheKeys.TOKEN_USER + str(key))
         if user_data:
-            user_dict = json.loads(user_data)
+            user_dict = user_data
             user_obj = User()
             for key_name in user_dict.keys():
                 setattr(user_obj, key_name, user_dict[key_name])
