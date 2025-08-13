@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -5,6 +6,7 @@ from rest_framework.views import APIView
 from AAServer.common.pagination import CwsPageNumberPagination
 from AAServer.response import R, ResponseEnum
 from apps.teacher.models import Teacher
+from apps.auth.models import User
 from apps.teacher.serializers import TeacherCreateSerializer, TeacherSerializer, TeacherFlatUpdateSerializer
 
 
@@ -48,6 +50,7 @@ class TeacherMngView(APIView):
         serializer = TeacherSerializer(page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
+    @transaction.atomic
     def delete(self, request):
         """
         删除教师信息（逻辑删除）
@@ -57,9 +60,17 @@ class TeacherMngView(APIView):
             return R.fail(ResponseEnum.PARAM_IS_BLANK)
         qs = Teacher.objects.filter(id__in=ids)
         count = qs.count()
+
+        # 获取用户ID列表
+        user_ids = qs.values_list('user_id', flat=True).distinct()
+
         if count == 0:
-            return R.fail(ResponseEnum.DATA_NOT_EXIST)
+            return R.fail(ResponseEnum.PARAM_IS_BLANK)
         deleted_count = qs.delete()  # 逻辑删除
+
+        # 删除用户信息
+        User.objects.filter(id__in=user_ids).delete()
+
         return R.success({
             'deleted_count': deleted_count
         })
