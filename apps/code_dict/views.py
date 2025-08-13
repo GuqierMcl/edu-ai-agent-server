@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from AAServer import app_properties
 from AAServer.common.pagination import CwsPageNumberPagination
 from AAServer.response import R, ResponseEnum
 from apps.code_dict.models import Code
@@ -80,10 +81,10 @@ class CodeView(APIView):
         return R.success(data={'deleted_count': deleted_count})
 
 
-@api_view
+@api_view(['GET'])
 def get_options(request, type_name):
     """
-    获取码表类型选项
+    获取选项列表
     :param type_name:
     :param request:
     :return:
@@ -96,3 +97,12 @@ def get_options(request, type_name):
         return R.fail(ResponseEnum.DATA_NOT_FOUND, data={'type': type_name})
 
     return R.success(data=CodeSerializer(codes, many=True).data)
+
+@api_view(['GET'])
+def get_code_type(request):
+    """
+    获取码表类型
+    :param request:
+    :return:
+    """
+    return R.success(app_properties.Code.CODE_TYPE)

@@ -16,4 +16,5 @@ from apps.code_dict.views import CodeView
 urlpatterns = [
     path('', CodeView.as_view()),
     path('/options/<str:type_name>', apps.code_dict.views.get_options),
+    path('/type', apps.code_dict.views.get_code_type),
 ]
