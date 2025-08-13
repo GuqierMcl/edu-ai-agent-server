@@ -41,9 +41,10 @@ def get_user_perms(user) -> list:
     # 兼容 dict / User 实例
     user_id = user['id'] if isinstance(user, dict) else user.id
 
-    user_info = redis_util.get_value(CacheKeys.USER_INFO + str(user_id))
-    if user_info:
-        perms = user_info['permissions']
+    permission_dict = redis_util.get_value(CacheKeys.USER_PERMISSIONS + str(user_id))
+    if permission_dict:
+        return list(permission_dict)
     else:
         perms = get_user_perms_from_db(user if isinstance(user, User) else User.objects.get(id=user_id))
-    return perms
+        redis_util.set_value(CacheKeys.USER_PERMISSIONS + str(user_id), str(list(perms)), timeout=3600 * 24)  # 缓存一天
+        return perms

@@ -10,9 +10,12 @@
 """
 
 from rest_framework import serializers
+
+from AAServer import app_properties
 from apps.code_dict.models import Code
 
 class CodeSerializer(serializers.ModelSerializer):
+    typeName = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Code
         fields = '__all__'
@@ -23,3 +26,7 @@ class CodeSerializer(serializers.ModelSerializer):
             'name': {'required': True, 'max_length': 255},
             'sequence': {'required': False}
         }
+
+    def get_typeName(self, obj):
+        code_type = app_properties.Code.CODE_TYPE
+        return next((item['name'] for item in code_type if item['type'] == obj.type), None)

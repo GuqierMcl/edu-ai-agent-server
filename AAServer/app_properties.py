@@ -12,36 +12,21 @@
 class Code:
     CODE_TYPE = [
         {
-            'name': '智能体类型',
-            'type': 'ai_type'
-        },
-        {
-            'name': '智能体状态',
-            'type': 'ai_status'
-        },
-        {
-            'name': '智能体能力',
-            'type': 'ai_ability'
-        },
-        {
-            'name': '智能体模型',
-            'type': 'ai_model'
-        },
-        {
-            'name': '智能体语言',
-            'type': 'ai_language'
-        },
-        {
-            'name': '智能体领域',
-            'type': 'ai_domain'
+            'name': '教师职业',
+            'type': 'teacher_profession'
         },
     ]
 
 class Resource:
     """
     资源相关常量
+    type < 0 为系统内置资源，用户不可修改
     """
     RESOURCE_TYPE = [
+        {
+            'name': '用户头像（系统）',
+            'type': -1
+        },
         {
             'name': '图片资源',
             'type': 0
@@ -65,16 +50,5 @@ class Resource:
         {
             'name': '其他资源',
             'type': 5
-        }
-    ]
-
-    RESOURCE_STATUS = [
-        {
-            'name': '可用',
-            'status': 1
-        },
-        {
-            'name': '不可用',
-            'status': 0
         }
     ]

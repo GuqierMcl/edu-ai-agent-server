@@ -24,9 +24,6 @@ class User(AbstractBaseUser, BaseModel):
     avatar = models.BigIntegerField(blank=True, null=True, db_comment='头像ID，值为tb_image图片ID')
     expired_time = models.DateTimeField(blank=True, null=True, db_comment='账号到期时间')
     last_login = models.DateTimeField(blank=True, null=True, db_comment='上一次登录时间')
-    is_del = models.IntegerField(db_column='del', blank=True, null=True,
-                                    db_comment='逻辑删除')
-    create_time = models.DateTimeField(blank=True, null=True, db_comment='创建时间')
 
     class Meta:
         db_table = 'sys_user'

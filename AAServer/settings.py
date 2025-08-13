@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     # 'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',  # 注册rest应用
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     'django_minio_backend',  # MinIO存储后端
 
     # Project Apps
@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'apps.resource.apps.ResourceConfig',
     'apps.permission.apps.PermissionConfig',
     'apps.user.apps.UserConfig',
-    'apps.code_dict.apps.CodeDictConfig'
+    'apps.code_dict.apps.CodeDictConfig',
+    'apps.teacher.apps.TeacherConfig'
 ]
 
 MIDDLEWARE = [
