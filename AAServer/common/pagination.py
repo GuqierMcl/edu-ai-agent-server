@@ -26,7 +26,8 @@ class CwsPageNumberPagination(PageNumberPagination):
     def get_paginated_response(self, data):
         return R.success({
             'records': data,
-            'total': self.page.paginator.num_pages,
+            'totalPage': self.page.paginator.num_pages,
+            'total': self.page.paginator.count,
             'size': self.page_size,
             'current': self.page.number,
         })

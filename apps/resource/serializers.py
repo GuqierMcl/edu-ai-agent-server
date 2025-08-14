@@ -11,7 +11,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from AAServer import app_properties
+from AAServer import constants
 from .models import Resource
 import django.conf
 
@@ -41,7 +41,7 @@ class ResourceSerializer(ModelSerializer):
         return f'{"https" if USE_HTTPS else "http"}://{ENDPOINT}/{BUCKETS[0]}/{obj.file}'
 
     def get_type_name(self, obj):
-        type_dict = {item['type']: item['name'] for item in app_properties.Resource.RESOURCE_TYPE}
+        type_dict = {item['type']: item['name'] for item in constants.Resource.RESOURCE_TYPE}
         return type_dict.get(obj.type, '未知')
 
 

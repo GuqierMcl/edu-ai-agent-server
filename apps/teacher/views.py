@@ -15,6 +15,7 @@ class TeacherMngView(APIView):
     教师管理视图
     """
 
+    @transaction.atomic
     def post(self, request):
         """
         添加教师信息
@@ -75,6 +76,7 @@ class TeacherMngView(APIView):
             'deleted_count': deleted_count
         })
 
+    @transaction.atomic
     def put(self, request):
         """
         更新教师信息

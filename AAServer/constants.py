@@ -3,7 +3,7 @@
 """
 应用全局常量
 @Project : AAServer 
-@File    : app_properties.py
+@File    : constants.py
 @IDE     : PyCharm 
 @Author  : Guqier
 @Date    : 2025/8/13 13:03 
@@ -15,6 +15,14 @@ class Code:
             'name': '教师职业',
             'type': 'teacher_profession'
         },
+        {
+            'name': '学生身份',
+            'type': 'student_identity'
+        },
+        {
+            'name': '教师职称',
+            'type': 'teacher_title'
+        }
     ]
 
 class Resource:
@@ -52,3 +60,11 @@ class Resource:
             'type': 5
         }
     ]
+
+class User:
+    """
+    用户相关常量
+    """
+    USER_TYPE_ADMIN   = 0  # 管理员
+    USER_TYPE_TEACHER = 1  # 教师
+    USER_TYPE_STUDENT = 2  # 学生

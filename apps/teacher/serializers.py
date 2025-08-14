@@ -12,13 +12,11 @@ from django.contrib.auth.hashers import make_password
 from django.db import transaction
 from rest_framework import serializers
 
+from AAServer import constants
 from apps.auth.models import User
 from apps.teacher.models import Teacher
-
-class UserInlineSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        exclude = ('password', 'is_del', 'create_user', 'create_time', 'update_time', 'update_user')   # 不暴露敏感字段
+from apps.user.serializers import UserInlineSerializer
+from apps.user.services import create_user_by_validated_data, update_user_by_validated_data
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -45,17 +43,11 @@ class TeacherCreateSerializer(serializers.Serializer):
     @transaction.atomic
     def create(self, validated_data):
         # 1. 先创建用户
-        password = validated_data.pop('password')
-        user_fields = {k: validated_data.pop(k) for k in list(validated_data) if k in ['account', 'name', 'nickname', 'phone', 'email']}
-        user = User.objects.create(
-            type=1,                         # 固定教师角色
-            **user_fields,
-            password=make_password(password),
-        )
+        _user, _data = create_user_by_validated_data(validated_data, user_type=constants.User.USER_TYPE_TEACHER)  # 固定教师角色
 
         # 2. 再创建教师
         teacher = Teacher.objects.create(
-            user=user,
+            user=_user,
             **validated_data,
         )
         return teacher
@@ -76,26 +68,13 @@ class TeacherFlatUpdateSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        # 1. 拆出用户字段
-        user_fields = {}
-        for key in ('nickname', 'name', 'phone', 'email'):
-            if key in validated_data:
-                user_fields[key] = validated_data.pop(key)
+        # 1. 更新用户信息
+        _user, _data = update_user_by_validated_data(instance.user, validated_data)
 
-        # 2. 更新用户
-        user = instance.user
-        print(user_fields)
-        print(validated_data)
-        if user_fields:
-            print("修改用户信息:", user_fields)
-            for k, v in user_fields.items():
-                setattr(instance.user, k, v)
-            instance.user.save()
-
-        # 3. 更新教师
+        # 2. 更新教师
         for k, v in validated_data.items():
             if k == 'user':
-                setattr(instance, k, user)
+                setattr(instance, k, _user)
             else:
                 setattr(instance, k, v)
         instance.save()

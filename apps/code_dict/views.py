@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from AAServer import app_properties
+from AAServer import constants
 from AAServer.common.pagination import CwsPageNumberPagination
 from AAServer.response import R, ResponseEnum
 from apps.code_dict.models import Code
@@ -25,7 +25,7 @@ class CodeView(APIView):
         """
         cs = CodeSerializer(data=request.data)
         cs.is_valid(raise_exception=True)
-        cs.save(sequence=cs.validated_data['sequence'] if 'sequence' in cs.validated_data else 1)
+        cs.save(sequence=int(cs.validated_data['sequence']) if 'sequence' in cs.validated_data else 1)
         return R.success(cs.validated_data)
 
     def get(self, request, *args, **kwargs):
@@ -107,4 +107,4 @@ def get_code_type(request):
     :param request:
     :return:
     """
-    return R.success(app_properties.Code.CODE_TYPE)
+    return R.success(constants.Code.CODE_TYPE)

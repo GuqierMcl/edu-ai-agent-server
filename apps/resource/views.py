@@ -2,7 +2,7 @@ import django.conf
 from django.contrib.admin.templatetags.admin_list import pagination
 from rest_framework.decorators import api_view
 
-from AAServer import app_properties
+from AAServer import constants
 from AAServer.common.middleware import GlobalRequestMiddleware
 from AAServer.common.pagination import CwsPageNumberPagination
 from AAServer.response import R, ResponseEnum
@@ -108,4 +108,4 @@ def get_resource_type(request):
     :param request:
     :return:
     """
-    return R.success(data=app_properties.Resource.RESOURCE_TYPE)
+    return R.success(data=constants.Resource.RESOURCE_TYPE)

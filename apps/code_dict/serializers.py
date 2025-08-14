@@ -11,11 +11,16 @@
 
 from rest_framework import serializers
 
-from AAServer import app_properties
+from AAServer import constants
 from apps.code_dict.models import Code
 
 class CodeSerializer(serializers.ModelSerializer):
     typeName = serializers.SerializerMethodField(read_only=True)
+    sequence = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        default=1
+    )
     class Meta:
         model = Code
         fields = '__all__'
@@ -28,5 +33,10 @@ class CodeSerializer(serializers.ModelSerializer):
         }
 
     def get_typeName(self, obj):
-        code_type = app_properties.Code.CODE_TYPE
+        code_type = constants.Code.CODE_TYPE
         return next((item['name'] for item in code_type if item['type'] == obj.type), None)
+
+    def validate_sequence(self, value):
+        if value is None or value == '':
+            return 1
+        return value

@@ -15,6 +15,10 @@ from apps.auth.utils import get_user_perms
 from apps.resource.models import Resource
 from apps.resource.serializers import ResourceSerializer
 
+class UserInlineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ('password', 'is_del', 'create_user', 'create_time', 'update_time', 'update_user')   # 不暴露敏感字段
 
 class UserSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField(read_only=True)
@@ -49,5 +53,3 @@ class UserInfoSerializer(UserSerializer):
 
     def get_roles(self, obj):
         return ['admin']  # TODO: 获取用户角色列表，待实现
-
-
