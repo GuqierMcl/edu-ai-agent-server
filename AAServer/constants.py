@@ -68,3 +68,6 @@ class User:
     USER_TYPE_ADMIN   = 0  # 管理员
     USER_TYPE_TEACHER = 1  # 教师
     USER_TYPE_STUDENT = 2  # 学生
+
+    # 用户密码校验正则表达式：包含8-20个字符且包含至少一个字母和一个数字
+    USER_PASSWORD_REGEX = r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+={}\[\]:;"\'<>,.?/\\|-]{8,20}$'

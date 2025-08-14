@@ -37,7 +37,7 @@ def update_user_by_validated_data(user, validated_data):
     :param validated_data: 序列化器验证后的数据
     :return: 更新后的用户对象和剩余的 validated_data
     """
-    user_fields = {k: validated_data.pop(k) for k in list(validated_data) if k in ['account', 'name', 'nickname', 'phone', 'email']}
+    user_fields = {k: validated_data.pop(k) for k in list(validated_data) if k in ['name', 'nickname', 'phone', 'email']}
 
     for attr, value in user_fields.items():
         setattr(user, attr, value)

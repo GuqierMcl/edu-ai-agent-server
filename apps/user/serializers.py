@@ -8,8 +8,10 @@
 @Date    : 2025/8/11 17:19 
 @Version : 1.0
 """
+from django.core.validators import RegexValidator
 from rest_framework import serializers
 
+from AAServer import constants
 from apps.auth.models import User
 from apps.auth.utils import get_user_perms
 from apps.resource.models import Resource
@@ -22,6 +24,12 @@ class UserInlineSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField(read_only=True)
+    password = serializers.CharField(write_only=True, validators=[
+        RegexValidator(
+            regex=constants.User.USER_PASSWORD_REGEX,
+            message='密码必须 8-20 位，且包含字母、数字'
+        )
+    ])
 
     class Meta:
         model = User
