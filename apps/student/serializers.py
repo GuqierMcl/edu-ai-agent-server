@@ -25,7 +25,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        exclude = ('create_user', 'update_user')
+        exclude = ('create_user', 'update_user', 'is_del')
 
     def get_identity_name(self, obj):
         return get_code_name_by_type_and_code(obj.identity, constants.CodeDict.CODE_STUDENT_IDENTITY)

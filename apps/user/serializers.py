@@ -63,7 +63,7 @@ class UserInfoSerializer(UserSerializer):
 
     class Meta:
         model = User
-        exclude = ('password', 'is_del', 'create_time', 'update_time', 'create_user', 'update_user')
+        exclude = ('is_del', 'create_time', 'update_time', 'create_user', 'update_user')
 
     def get_permission_keys(self, obj):
         return get_user_perms(obj)  # 转 list 方便 JSON
