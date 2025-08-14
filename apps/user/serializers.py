@@ -18,15 +18,24 @@ from apps.resource.models import Resource
 from apps.resource.serializers import ResourceSerializer
 
 class UserInlineSerializer(serializers.ModelSerializer):
+    avatar_url = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = User
         exclude = ('password', 'is_del', 'create_user', 'create_time', 'update_time', 'update_user')   # 不暴露敏感字段
+
+    def get_avatar_url(self, obj):
+        avatar_id = obj.avatar if isinstance(obj, User) else obj['avatar']
+        if avatar_id:
+            resource = Resource.objects.get(id=avatar_id)
+            url = ResourceSerializer(resource).data['remote_file_url']
+            return url
+        return None
 
 class UserSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField(read_only=True)
     password = serializers.CharField(write_only=True, validators=[
         RegexValidator(
-            regex=constants.User.USER_PASSWORD_REGEX,
+            regex=constants.UserDict.USER_PASSWORD_REGEX,
             message='密码必须 8-20 位，且包含字母、数字'
         )
     ])

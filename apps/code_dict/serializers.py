@@ -33,7 +33,7 @@ class CodeSerializer(serializers.ModelSerializer):
         }
 
     def get_typeName(self, obj):
-        code_type = constants.Code.CODE_TYPE
+        code_type = constants.CodeDict.CODE_TYPE
         return next((item['name'] for item in code_type if item['type'] == obj.type), None)
 
     def validate_sequence(self, value):

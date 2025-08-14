@@ -9,23 +9,31 @@
 @Date    : 2025/8/13 13:03 
 @Version : 1.0
 """
-class Code:
+class CodeDict:
+    CODE_TEACHER_PROFESSION = 'teacher_profession' # 教师职业
+    CODE_STUDENT_IDENTITY = 'student_identity' # 学生身份
+    CODE_TEACHER_TITLE = 'teacher_title' # 教师职称
+    STUDENT_STATUS = 'student_status' # 学生状态
     CODE_TYPE = [
         {
             'name': '教师职业',
-            'type': 'teacher_profession'
+            'type': CODE_TEACHER_PROFESSION
         },
         {
             'name': '学生身份',
-            'type': 'student_identity'
+            'type': CODE_STUDENT_IDENTITY
         },
         {
             'name': '教师职称',
-            'type': 'teacher_title'
+            'type': CODE_TEACHER_TITLE
+        },
+        {
+            'name': '学生状态',
+            'type': STUDENT_STATUS
         }
     ]
 
-class Resource:
+class ResourceDict:
     """
     资源相关常量
     type < 0 为系统内置资源，用户不可修改
@@ -61,7 +69,7 @@ class Resource:
         }
     ]
 
-class User:
+class UserDict:
     """
     用户相关常量
     """

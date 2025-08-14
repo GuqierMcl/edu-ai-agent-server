@@ -43,7 +43,7 @@ class TeacherMngView(APIView):
                            Q(user__account__icontains=keyword) |
                            Q(user__phone__icontains=keyword) |
                            Q(user__email__icontains=keyword))
-        qs.order_by('update_time')
+        qs = qs.order_by('-create_time')
 
         paginator = CwsPageNumberPagination()
         page = paginator.paginate_queryset(qs, request)

@@ -107,4 +107,4 @@ def get_code_type(request):
     :param request:
     :return:
     """
-    return R.success(constants.Code.CODE_TYPE)
+    return R.success(constants.CodeDict.CODE_TYPE)

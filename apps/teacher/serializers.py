@@ -14,6 +14,7 @@ from rest_framework import serializers
 
 from AAServer import constants
 from apps.auth.models import User
+from apps.code_dict.services import get_code_name_by_type_and_code
 from apps.teacher.models import Teacher
 from apps.user.serializers import UserInlineSerializer
 from apps.user.services import create_user_by_validated_data, update_user_by_validated_data
@@ -21,10 +22,14 @@ from apps.user.services import create_user_by_validated_data, update_user_by_val
 
 class TeacherSerializer(serializers.ModelSerializer):
     user = UserInlineSerializer(read_only=True)
+    profession_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Teacher
-        fields = ('id', 'user', 'stu_friendly_name', 'profession', 'department', 'create_time', 'update_time')
+        fields = ('id', 'user', 'stu_friendly_name', 'profession', 'profession_name', 'department', 'create_time', 'update_time')
+
+    def get_profession_name(self, obj):
+        return get_code_name_by_type_and_code(obj.profession, constants.CodeDict.CODE_TEACHER_PROFESSION)
 
 class TeacherCreateSerializer(serializers.Serializer):
     # 用户字段
@@ -43,7 +48,7 @@ class TeacherCreateSerializer(serializers.Serializer):
     @transaction.atomic
     def create(self, validated_data):
         # 1. 先创建用户
-        _user, _data = create_user_by_validated_data(validated_data, user_type=constants.User.USER_TYPE_TEACHER)  # 固定教师角色
+        _user, _data = create_user_by_validated_data(validated_data, user_type=constants.UserDict.USER_TYPE_TEACHER)  # 固定教师角色
 
         # 2. 再创建教师
         teacher = Teacher.objects.create(

@@ -17,5 +17,8 @@ def get_code_name_by_type_and_code(code, code_type):
     :param code_type: 类型
     :return: 名称
     """
-    instance = Code.objects.get(code=code, code_type=code_type)
-    return instance.name
+    try:
+        instance = Code.objects.get(code=code, type=code_type)
+        return instance.name
+    except Code.DoesNotExist:
+        return None

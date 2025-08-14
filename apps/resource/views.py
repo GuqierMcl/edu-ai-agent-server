@@ -108,4 +108,4 @@ def get_resource_type(request):
     :param request:
     :return:
     """
-    return R.success(data=constants.Resource.RESOURCE_TYPE)
+    return R.success(data=constants.ResourceDict.RESOURCE_TYPE)

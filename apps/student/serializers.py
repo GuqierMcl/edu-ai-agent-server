@@ -12,6 +12,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 from AAServer import constants
+from apps.code_dict.services import get_code_name_by_type_and_code
 from apps.student.models import Student
 from apps.user.serializers import UserInlineSerializer
 from apps.user.services import update_user_by_validated_data, create_user_by_validated_data
@@ -19,10 +20,18 @@ from apps.user.services import update_user_by_validated_data, create_user_by_val
 
 class StudentSerializer(serializers.ModelSerializer):
     user = UserInlineSerializer(read_only=True)
+    identity_name = serializers.SerializerMethodField(read_only=True)
+    status_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Student
         exclude = ('create_user', 'update_user')
+
+    def get_identity_name(self, obj):
+        return get_code_name_by_type_and_code(obj.identity, constants.CodeDict.CODE_STUDENT_IDENTITY)
+
+    def get_status_name(self, obj):
+        return get_code_name_by_type_and_code(obj.status, constants.CodeDict.STUDENT_STATUS)
 
 
 class StudentCreateSerializer(serializers.Serializer):
@@ -48,7 +57,7 @@ class StudentCreateSerializer(serializers.Serializer):
     @transaction.atomic
     def create(self, validated_data):
         # 1. 先创建用户
-        _user, _data = create_user_by_validated_data(validated_data, user_type=constants.User.USER_TYPE_STUDENT)  # 固定学生角色
+        _user, _data = create_user_by_validated_data(validated_data, user_type=constants.UserDict.USER_TYPE_STUDENT)  # 固定学生角色
 
         # 2. 再创建学生
         student = Student.objects.create(
