@@ -11,6 +11,8 @@
 
 from django.contrib.auth.hashers import make_password
 from apps.auth.models import User
+from apps.user.serializers import UserSerializer
+
 
 def create_user_by_validated_data(validated_data, user_type):
     """
@@ -19,15 +21,18 @@ def create_user_by_validated_data(validated_data, user_type):
     :param user_type: 用户类型（1-教师，2-学生）
     :return: 创建的用户对象和剩余的 validated_data
     """
-    password = validated_data.pop('password')
-    user_fields = {k: validated_data.pop(k) for k in list(validated_data) if k in ['account', 'name', 'nickname', 'phone', 'email']}
+    password = validated_data['password']
+    user_fields = {k: validated_data.pop(k) for k in list(validated_data) if k in ['account', 'password', 'name', 'nickname', 'phone', 'email']}
 
-    user = User.objects.create(
-        type=user_type,
-        password=make_password(password),
-        **user_fields,
-    )
+    # user = User.objects.create(
+    #     type=user_type,
+    #     password=make_password(password),
+    #     **user_fields,
+    # )
 
+    serializer = UserSerializer(data=user_fields)
+    serializer.is_valid(raise_exception=True)
+    user = serializer.save(type=user_type, password=make_password(password))
     return user, validated_data
 
 def update_user_by_validated_data(user, validated_data):
@@ -39,9 +44,12 @@ def update_user_by_validated_data(user, validated_data):
     """
     user_fields = {k: validated_data.pop(k) for k in list(validated_data) if k in ['name', 'nickname', 'phone', 'email']}
 
-    for attr, value in user_fields.items():
-        setattr(user, attr, value)
+    # for attr, value in user_fields.items():
+    #     setattr(user, attr, value)
 
-    user.save()
+    # user.save()
+    serializer = UserSerializer(instance=user, data=user_fields)
+    serializer.is_valid(raise_exception=True)
+    user = serializer.save()
 
     return user, validated_data
