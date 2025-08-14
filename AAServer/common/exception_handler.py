@@ -19,6 +19,8 @@ from rest_framework.views import exception_handler
 from AAServer.response import ResponseEnum, R
 
 logger = logging.getLogger("AAServer")
+
+
 def common_exception_handler(exc, context):
     """
     通用异常处理
@@ -43,7 +45,7 @@ def common_exception_handler(exc, context):
     if isinstance(exc, NotAuthenticated):
         return R.fail(ResponseEnum.USER_NOT_LOGIN, data=exc.detail)
     if isinstance(exc, ValidationError):
-        return R.fail(ResponseEnum.PARAM_IS_INVAlID, data=exc.detail)
+        return R.fail_code_msg(ResponseEnum.PARAM_IS_INVAlID.code, '错误：' + str(exc), data=exc.detail)
     if isinstance(exc, redis.exceptions.RedisError):
         return R.fail(ResponseEnum.NETWORK_ERROR, data=str(exc))
     if isinstance(exc, NotFound):

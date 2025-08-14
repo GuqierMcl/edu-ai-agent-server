@@ -40,3 +40,10 @@ class CodeSerializer(serializers.ModelSerializer):
         if value is None or value == '':
             return 1
         return value
+
+    def validate(self, attrs):
+        _type = attrs.get('type')
+        _code = attrs.get('code')
+        if Code.objects.filter(code=_code, type=_type).count() != 0:
+            raise serializers.ValidationError(f"代码：'{_code}' 在 '{_type}' 类型中已经存在，请使用其他代码。")
+        return attrs
