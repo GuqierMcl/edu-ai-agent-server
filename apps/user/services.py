@@ -44,12 +44,12 @@ def update_user_by_validated_data(user, validated_data):
     """
     user_fields = {k: validated_data.pop(k) for k in list(validated_data) if k in ['name', 'nickname', 'phone', 'email']}
 
-    # for attr, value in user_fields.items():
-    #     setattr(user, attr, value)
+    for attr, value in user_fields.items():
+        setattr(user, attr, value)
 
-    # user.save()
-    serializer = UserSerializer(instance=user, data=user_fields)
-    serializer.is_valid(raise_exception=True)
-    user = serializer.save()
+    user = user.save()
+    # serializer = UserSerializer(instance=user, data=user_fields)
+    # serializer.is_valid(raise_exception=True)
+    # user = serializer.save()
 
     return user, validated_data

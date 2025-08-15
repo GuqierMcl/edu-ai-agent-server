@@ -68,10 +68,10 @@ class StudentCreateSerializer(serializers.Serializer):
 
 class StudentFlatUpdateSerializer(serializers.ModelSerializer):
     # 把 user 表字段“平铺”到顶层
-    nickname = serializers.CharField(required=False, allow_blank=False)
-    name = serializers.CharField(required=False, allow_blank=False)
-    phone = serializers.CharField(required=False, allow_blank=False)
-    email = serializers.CharField(required=False, allow_blank=False)
+    nickname = serializers.CharField(required=False, allow_blank=False, allow_null=True)
+    name = serializers.CharField(required=False, allow_blank=False, allow_null=True)
+    phone = serializers.CharField(required=False, allow_blank=False, allow_null=True)
+    email = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = Student
